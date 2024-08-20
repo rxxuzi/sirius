@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sirius - Dashboard</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+</head>
+<body>
+<h1>Sirius Dashboard</h1>
+<div id="connection-status"></div>
+<div id="links">
+    <h2>Actions</h2>
+    <ul>
+        <li><a href="/info">View Remote Info</a></li>
+        <li><a href="terminal.html">Open Terminal</a></li>
+    </ul>
+</div>
+<script>
+    fetch('/status')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('connection-status').textContent = data;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+</script>
+</body>
+</html>

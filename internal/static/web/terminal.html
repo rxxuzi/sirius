@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sirius Terminal</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xterm/3.14.5/xterm.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/xterm/3.14.5/xterm.min.css" />
+  <style>
+    #terminal {
+      width: 800px;
+      height: 400px;
+    }
+    #message {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+  <link rel="icon" type="image" href="favicon.ico">
+</head>
+<body>
+<h1>Sirius Terminal</h1>
+<div id="terminal"></div>
+<div id="message"></div>
+<script>
+  const term = new Terminal();
+  term.open(document.getElementById('terminal'));
+
+  const socket = new WebSocket('ws://' + window.location.host + '/terminal');
+  let commandBuffer = '';
+
+  socket.onopen = function(e) {
+    console.log('WebSocket connection established');
+  };
+
+  socket.onmessage = function(event) {
+    term.write(event.data);
+  };
+
+  term.onData(function(data) {
+    socket.send(data);
+    commandBuffer += data;
+    if (data === '\r') {
+      if (commandBuffer.trim() === 'exit') {
+        socket.send('exit\r');
+        document.getElementById('message').innerText = 'Session ended. You can now close this window and terminate luka.exe.';
+      }
+      commandBuffer = '';
+    }
+  });
+
+  socket.onclose = function(event) {
+    if (event.wasClean) {
+      console.log(`Connection closed cleanly, code=${event.code} reason=${event.reason}`);
+    } else {
+      console.log('Connection died');
+    }
+    term.write('\r\nConnection to the server closed.\r\n');
+  };
+
+  socket.onerror = function(error) {
+    console.error(`WebSocket error: ${error.message}`);
+    term.write(`\r\nWebSocket error: ${error.message}\r\n`);
+  };
+</script>
+</body>
+</html>
