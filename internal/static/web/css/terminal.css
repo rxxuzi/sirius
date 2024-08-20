@@ -1,0 +1,68 @@
+#terminal {
+    min-width: 800px;
+    min-height: 400px;
+    width: 1000px;
+    height: 500px;
+    max-width: 90vw;
+    max-height: 80vh;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(178, 216, 255, 0.3);
+    margin: 20px;
+    resize: both;
+    padding: 10px;
+    position: relative;
+}
+
+
+#terminal .xterm {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    right: 2px;
+    bottom: 2px;
+}
+
+#message {
+    margin-top: 10px;
+    color: var(--sirius);
+    text-align: center;
+    font-weight: bold;
+}
+
+.xterm-viewport::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+.xterm-viewport::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+}
+
+.xterm-viewport::-webkit-scrollbar-thumb {
+    background-color: rgba(178, 216, 255, 0.5);
+    border-radius: 10px;
+    border: 3px solid rgba(0, 0, 0, 0.3);
+}
+
+.xterm-viewport::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(178, 216, 255, 0.7);
+}
+
+.xterm-viewport {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(178, 216, 255, 0.5) rgba(0, 0, 0, 0.3);
+}
+
+#terminal::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 10px;
+    height: 10px;
+    cursor: nwse-resize;
+    background: linear-gradient(135deg, transparent 50%, rgba(178, 216, 255, 0.5) 50%);
+}
