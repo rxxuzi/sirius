@@ -4,27 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sirius - Dashboard</title>
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="stylesheet" href="css/sirius.css">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-<h1>Sirius Dashboard</h1>
-<div id="connection-status"></div>
-<div id="links">
-    <h2>Actions</h2>
-    <ul>
-        <li><a href="/info">View Remote Info</a></li>
-        <li><a href="terminal.html">Open Terminal</a></li>
-    </ul>
-</div>
-<script>
-    fetch('/status')
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('connection-status').textContent = data;
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-</script>
+<main>
+    <div class="content">
+        <h1>Sirius</h1>
+        <div id="links">
+            <h2>Actions</h2>
+            <ul>
+                <li><a href="/info"><i class="fa-solid fa-info"></i>View Remote Info</a></li>
+                <li><a href="/terminal"><i class="fas fa-terminal"></i>Open Terminal</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="star-container">
+        <div id="star"></div>
+    </div>
+</main>
 </body>
 </html>

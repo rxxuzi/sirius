@@ -25,7 +25,31 @@ func NewServer() *http.Server {
 	mux.HandleFunc("/connect", handleConnect)
 	mux.HandleFunc("/status", handleStatus)
 	mux.HandleFunc("/info", handleInfo)
-	mux.HandleFunc("/terminal", handleTerminal)
+
+	// /terminal エンドポイント
+	mux.HandleFunc("/terminal", func(w http.ResponseWriter, r *http.Request) {
+		if r.Header.Get("Upgrade") == "websocket" {
+			handleTerminal(w, r)
+		} else {
+			file, err := staticFS.Open("terminal.html")
+			if err != nil {
+				http.Error(w, "File not found", http.StatusNotFound)
+				return
+			}
+			defer file.Close()
+
+			stat, err := file.Stat()
+			if err != nil {
+				http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+				return
+			}
+
+			http.ServeContent(w, r, "terminal.html", stat.ModTime(), file.(io.ReadSeeker))
+		}
+	})
+
+	// WebSocket 専用のエンドポイントを追加（オプション）
+	mux.HandleFunc("/ws", handleTerminal)
 
 	return &http.Server{
 		Addr:    ":8611",
