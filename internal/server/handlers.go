@@ -52,7 +52,7 @@ func handleLiveInfo(w http.ResponseWriter, r *http.Request) {
 
 	// CPU使用率を取得
 	cpuCmd := "top -bn1 | grep \"Cpu(s)\" | awk '{print $2 + $4}'"
-	cpuUsage, err := executeSSHCommand(cpuCmd)
+	cpuUsage, err := client.Exec(cpuCmd)
 	if err != nil {
 		log.Printf("Error getting CPU usage: %v", err)
 		info["CPU"] = "Error"
@@ -62,7 +62,7 @@ func handleLiveInfo(w http.ResponseWriter, r *http.Request) {
 
 	// メモリ使用率を取得
 	memCmd := "free | grep Mem | awk '{print $3/$2 * 100.0}'"
-	memUsage, err := executeSSHCommand(memCmd)
+	memUsage, err := client.Exec(memCmd)
 	if err != nil {
 		log.Printf("Error getting memory usage: %v", err)
 		info["Memory"] = "Error"
@@ -72,7 +72,7 @@ func handleLiveInfo(w http.ResponseWriter, r *http.Request) {
 
 	// GPU情報を取得（NVIDIA GPUがある場合）
 	gpuCmd := "if command -v nvidia-smi &> /dev/null; then nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits; else echo 'N/A'; fi"
-	gpuUsage, err := executeSSHCommand(gpuCmd)
+	gpuUsage, err := client.Exec(gpuCmd)
 	if err != nil {
 		log.Printf("Error getting GPU usage: %v", err)
 		info["GPU"] = "Error"
@@ -87,21 +87,6 @@ func handleLiveInfo(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(info)
-}
-
-func executeSSHCommand(cmd string) (string, error) {
-	session, err := client.SSHClient.NewSession()
-	if err != nil {
-		return "", fmt.Errorf("failed to create SSH session: %v", err)
-	}
-	defer session.Close()
-
-	output, err := session.CombinedOutput(cmd)
-	if err != nil {
-		return "", fmt.Errorf("failed to execute command: %v", err)
-	}
-
-	return strings.TrimSpace(string(output)), nil
 }
 
 func parseFloat(s string) float64 {

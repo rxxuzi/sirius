@@ -2,6 +2,7 @@ package client
 
 import (
 	"fmt"
+	"strings"
 	"sync"
 
 	"golang.org/x/crypto/ssh"
@@ -42,4 +43,19 @@ func IsConnected() bool {
 	SSHMutex.Lock()
 	defer SSHMutex.Unlock()
 	return SSHClient != nil
+}
+
+func Exec(cmd string) (string, error) {
+	session, err := SSHClient.NewSession()
+	if err != nil {
+		return "", fmt.Errorf("failed to create SSH session: %v", err)
+	}
+	defer session.Close()
+
+	output, err := session.CombinedOutput(cmd)
+	if err != nil {
+		return "", fmt.Errorf("failed to execute command: %v", err)
+	}
+
+	return strings.TrimSpace(string(output)), nil
 }
