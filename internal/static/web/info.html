@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sirius System Information</title>
+    <link rel="stylesheet" href="css/sirius.css">
+    <link rel="stylesheet" href="css/info.css">
+</head>
+<body>
+<main>
+    <div class="content">
+        <h1>Sirius System Information</h1>
+        <div id="static-info" class="info-section"></div>
+        <div id="real-time-info" class="info-section">
+            <div class="info-item">
+                <h3>CPU Usage</h3>
+                <div id="cpu-usage"></div>
+            </div>
+            <div class="info-item">
+                <h3>Memory Usage</h3>
+                <div id="memory-usage"></div>
+            </div>
+            <div class="info-item">
+                <h3>GPU Usage</h3>
+                <div id="gpu-usage"></div>
+            </div>
+        </div>
+        <button id="refresh-btn">Refresh Information</button>
+    </div>
+</main>
+<script src="javascript/info.js"></script>
+</body>
+</html>
